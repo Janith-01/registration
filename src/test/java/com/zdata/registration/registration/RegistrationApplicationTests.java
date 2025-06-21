@@ -1,4 +1,4 @@
-package com.zdata.registration;
+package com.zdata.registration.registration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

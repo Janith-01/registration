@@ -1,4 +1,4 @@
-package com.zdata.exception;
+package com.zdata.registration.exception;
 
 public class ResourceNotFoundException {
 }

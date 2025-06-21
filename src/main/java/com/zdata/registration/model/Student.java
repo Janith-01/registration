@@ -1,4 +1,4 @@
-package com.zdata.model;
+package com.zdata.registration.model;
 
 import java.util.UUID;
 
@@ -25,6 +25,12 @@ public class Student {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }
