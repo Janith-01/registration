@@ -1,42 +1,20 @@
 package com.zdata.registration.model;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Registration {
-    private UUID id;
     private UUID studentId;
     private UUID courseId;
+    private LocalDateTime registeredAt;
 
-    public Registration() {
-    }
-
-    public Registration(UUID id, UUID studentId, UUID courseId) {
-        this.id = id;
+    public Registration(UUID studentId, UUID courseId) {
         this.studentId = studentId;
         this.courseId = courseId;
+        this.registeredAt = LocalDateTime.now();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(UUID studentId) {
-        this.studentId = studentId;
-    }
-
-    public UUID getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(UUID courseId) {
-        this.courseId = courseId;
-    }
+    public UUID getStudentId() { return studentId; }
+    public UUID getCourseId() { return courseId; }
+    public LocalDateTime getRegisteredAt() { return registeredAt; }
 }

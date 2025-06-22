@@ -1,29 +1,16 @@
-package com.zdata.registration.model;
+package com.zdata.registration.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.UUID;
-
-
-public class Student {
-    private UUID id;
-    @NotBlank
+public class StudentDto {
+    @NotBlank(message = "Name is mandatory")
     private String name;
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email is mandatory")
+    @Email(message = "Email should be valid")
     private String email;
 
-    public Student() {
-        this.id = UUID.randomUUID();
-    }
 
-    public UUID getId(){
-        return id;
-    }
-    public void setId(UUID id) {
-        this.id = id;
-    }
     public String getName() {
         return name;
     }
@@ -36,5 +23,4 @@ public class Student {
     public void setEmail(String email) {
         this.email = email;
     }
-
 }
