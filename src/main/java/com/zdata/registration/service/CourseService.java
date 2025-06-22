@@ -1,47 +1,43 @@
 package com.zdata.registration.service;
 
+import com.zdata.registration.dto.CourseDto;
+import com.zdata.registration.exception.ConflictException;
 import com.zdata.registration.model.Course;
-import com.zdata.registration.dto.request.CreateCourseRequest;
-import com.zdata.registration.exception.DuplicateResourceException;
-import com.zdata.registration.repository.CourseRepository;
-
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class CourseService {
+    private final Map<UUID, Course> courses = new HashMap<>();
+    private final Map<String, UUID> courseCodeToId = new HashMap<>();
 
-    private final CourseRepository courseRepository;
-
-    public CourseService(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
-
-    public CourseResponse createCourse(CreateCourseRequest request) {
-        Optional<Course> existing = courseRepository.findByCode(request.getCode());
-        if (existing.isPresent()) {
-            throw new DuplicateResourceException("Course code already exists");
+    public Course addCourse(CourseDto courseDto) {
+        if (courseCodeToId.containsKey(courseDto.getCode())) {
+            throw new ConflictException("Course code " + courseDto.getCode() + " already exists");
         }
-
         Course course = new Course();
-        course.setId(UUID.randomUUID());
-        course.setTitle(request.getName());
-        course.setCode(request.getCode());
-
-        courseRepository.save(course);
-
-        return new CourseResponse(course.getId(), course.getTitle(), course.getCode());
+        course.setCode(courseDto.getCode());
+        course.setTitle(courseDto.getTitle());
+        course.setInstructor(courseDto.getInstructor());
+        courses.put(course.getId(), course);
+        courseCodeToId.put(course.getCode(), course.getId());
+        return course;
     }
 
-    public List<CourseResponse> getAllCourses() {
-        return courseRepository.findAll().stream()
-                .map(c -> new CourseResponse(c.getId(), c.getTitle(), c.getCode()))
-                .collect(Collectors.toList());
+    public List<Course> getAllCourses() {
+        return new ArrayList<>(courses.values());
     }
 
-    public Optional<Course> getCourseById(UUID id) {
-        return courseRepository.findById(id);
+    public Course getCourseById(UUID courseId) {
+        Course course = courses.get(courseId);
+        if (course == null) {
+            throw new ResourceNotFoundException("Course with ID " + courseId + " not found");
+        }
+        return course;
     }
 }

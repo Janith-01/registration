@@ -1,11 +1,13 @@
 package com.zdata.registration.service;
 
+import com.zdata.registration.dto.RegistrationDto;
+import com.zdata.registration.dto.StudentDto;
+import com.zdata.registration.exception.ConflictException;
+import com.zdata.registration.exception.ResourceNotFoundException;
+import com.zdata.registration.model.Course;
+import com.zdata.registration.model.Registration;
 import com.zdata.registration.model.Student;
-import com.zdata.registration.dto.request.CreateStudentRequest;
-import com.zdata.registration.dto.response.StudentResponse;
-import com.zdata.registration.repository.StudentRepository;
-import com.zdata.registration.exception.DuplicateResourceException;
-
+import com.zdata.registration.service.CourseService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,38 +15,64 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
+    private final Map<UUID, Student> students = new HashMap<>();
+    private final Map<String, UUID> emailToId = new HashMap<>();
+    private final Map<UUID, List<Registration>> studentRegistrations = new HashMap<>();
+    private final CourseService courseService;
 
-    private final StudentRepository studentRepository;
-
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentService(CourseService courseService) {
+        this.courseService = courseService;
     }
 
-    public StudentResponse createStudent(CreateStudentRequest request) {
-        // Check for duplicate email
-        Optional<Student> existing = studentRepository.findByEmail(request.getEmail());
-        if (existing.isPresent()) {
-            throw new DuplicateResourceException("Student with email already exists");
+    public Student addStudent(StudentDto studentDto) {
+        if (emailToId.containsKey(studentDto.getEmail())) {
+            throw new ConflictException("Email " + studentDto.getEmail() + " already exists");
         }
-
-        // Create and save new student
         Student student = new Student();
-        student.setId(UUID.randomUUID());
-        student.setName(request.getName());
-        student.setEmail(request.getEmail());
-
-        studentRepository.save(student);
-
-        return new StudentResponse(student.getId(), student.getName(), student.getEmail());
+        student.setName(studentDto.getName());
+        student.setEmail(studentDto.getEmail());
+        students.put(student.getId(), student);
+        emailToId.put(student.getEmail(), student.getId());
+        studentRegistrations.put(student.getId(), new ArrayList<>());
+        return student;
     }
 
-    public List<StudentResponse> getAllStudents() {
-        return studentRepository.findAll().stream()
-                .map(s -> new StudentResponse(s.getId(), s.getName(), s.getEmail()))
+    public Registration registerCourse(UUID studentId, UUID courseId) {
+        Student student = students.get(studentId);
+        if (student == null) {
+            throw new ResourceNotFoundException("Student with ID " + studentId + " not found");
+        }
+        courseService.getCourseById(courseId); // Validates course existence
+        List<Registration> registrations = studentRegistrations.get(studentId);
+        if (registrations.stream().anyMatch(r -> r.getCourseId().equals(courseId))) {
+            throw new ConflictException("Student is already registered for this course");
+        }
+        Registration registration = new Registration(studentId, courseId);
+        registrations.add(registration);
+        return registration;
+    }
+
+    public void dropCourse(UUID studentId, UUID courseId) {
+        Student student = students.get(studentId);
+        if (student == null) {
+            throw new ResourceNotFoundException("Student with ID " + studentId + " not found");
+        }
+        courseService.getCourseById(courseId); // Validates course existence
+        List<Registration> registrations = studentRegistrations.get(studentId);
+        boolean removed = registrations.removeIf(r -> r.getCourseId().equals(courseId));
+        if (!removed) {
+            throw new ResourceNotFoundException("Student is not registered for this course");
+        }
+    }
+
+    public List<Course> getRegisteredCourses(UUID studentId) {
+        Student student = students.get(studentId);
+        if (student == null) {
+            throw new ResourceNotFoundException("Student with ID " + studentId + " not found");
+        }
+        List<Registration> registrations = studentRegistrations.get(studentId);
+        return registrations.stream()
+                .map(r -> courseService.getCourseById(r.getCourseId()))
                 .collect(Collectors.toList());
-    }
-
-    public Optional<Student> getStudentById(UUID studentId) {
-        return studentRepository.findById(studentId);
     }
 }
