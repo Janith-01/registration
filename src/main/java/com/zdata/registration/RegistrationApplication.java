@@ -1,4 +1,4 @@
-package com.zdata.registration.registration;
+package com.zdata.registration;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
