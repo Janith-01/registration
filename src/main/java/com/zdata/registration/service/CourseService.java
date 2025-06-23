@@ -2,6 +2,7 @@ package com.zdata.registration.service;
 
 import com.zdata.registration.dto.CourseDto;
 import com.zdata.registration.exception.ConflictException;
+import com.zdata.registration.exception.ResourceNotFoundException;
 import com.zdata.registration.model.Course;
 import org.springframework.stereotype.Service;
 
