@@ -1,22 +1,84 @@
-README
-<xaiartifact artifact_id="f6d2d5cc-f913-459b-86c3-ec9d55a6ffc1"
-artifact_version_id="ccf87d77-637c-4a6f-a47b-67e4abbfeef6"
-title="README.md"
-contenttype="text/markdown"> # Student Course Registration System
-<h2>Overview</h2>
- <p>This is a Spring Boot application implementing a Student Course Registration System as per the ZDATA Innovations Backend Developer Intern Assessment.
- It provides RESTful APIs for managing students, courses, and course registrations using in-memory storage.</p> <h2>Prerequisites</h2> <ul> <li>Java 17</li> <li>Maven 3.8+</li> <li>IDE (e.g., IntelliJ IDEA)</li> </ul>
- <h2>Setup and Running Instructions</h2> <ol> <li>Clone the repository: <pre><code class="language-bash">git clone &#x3C;your-repo-url> cd srs </code></pre> </li>
- <li>Build the project: <pre><code class="language-bash">mvn clean install </code></pre> </li>
- <li>Run the application: <pre><code class="language-bash">mvn spring-boot:run </code></pre> </li>
- <li>Access the application at <code>http://localhost:8080</code>.</li> <li>Swagger UI is available at<code>http://localhost:8080/swagger-ui.html</code>.</li> </ol>
- <h2>Sample HTTP Requests</h2> <h3>Register a Student</h3> <pre><code class="language-bash">curl -X POST http://localhost:8080/students \ -H "Content-Type: application/json" \ -d '{"name":"John Doe","email":"john.doe@example.com"}'
- </code></pre> <h3>Add a Course</h3> <pre><code class="language-bash">curl -X POST http://localhost:8080/courses \ -H "Content-Type: application/json" \ -d '{"code":"CS101","title":"Introduction to Programming","instructor":"Dr. Smith"}' </code></pre>
- <h3>Register a Student for a Course</h3> <pre><code class="language-bash">curl -X POST http://localhost:8080/students/{studentId}/register/{courseId} </code></pre> <h3>Drop a Course</h3>
- <pre><code class="language-bash">curl -X DELETE http://localhost:8080/students/{studentId}/drop/{courseId} </code></pre> <h3>List Registered Courses</h3> <pre><code class="language-bash">curl -X GET http://localhost:8080/students/{studentId}/courses </code></pre>
- <h3>List All Courses</h3> <pre><code class="language-bash">curl -X GET http://localhost:8080/courses </code></pre> <h2>Assumptions</h2> <ul> <li>UUIDs are used for IDs to ensure uniqueness.</li> <li>In-memory storage uses HashMaps for students, courses, and registrations.</li>
- <li>No pagination is implemented for GET /courses (bonus feature not included due to time constraints).</li> <li>Basic unit tests cover core functionality; comprehensive testing can be extended.</li> </ul>
- <h2>Code Structure</h2> <ul> <li><strong>config/</strong>: Swagger configuration for API documentation.</li> <li><strong>controller/</strong>: REST controllers for handling HTTP requests.</li> <li><strong>dto/</strong>: Data Transfer Objects for request/response payloads.</li>
- <li><strong>model/</strong>: Core data models (Student, Course, Registration).</li> <li><strong>service/</strong>: Business logic and in-memory storage.</li> <li><strong>exception/</strong>: Custom exceptions for error handling.</li> <li><strong>test/</strong>: Unit tests using JUnit and Mockito.</li> </ul>
- <h2>Test Coverage</h2> <ul> <li>Basic unit tests cover course addition and student registration.</li> <li>Tests verify business constraints (e.g., unique email, unique course code, duplicate registration prevention).</li> <li>Further test coverage can be added for edge cases.</li> </ul>
- <h2>Contact</h2> <p>For clarifications, reach out to the ZDATA Innovation team.</p> <pre><code></code></pre></xaiartifact>
+        Student Course Registration System
+Overview
+This is a Spring Boot application implementing a Student Course Registration System as per the ZDATA Innovations Backend Developer Intern Assessment.
+It provides RESTful APIs for managing students, courses, and course registrations using in-memory storage.
+
+Prerequisites
+Java 17
+
+Maven 3.8+
+
+IDE (e.g., IntelliJ IDEA)
+
+Setup and Running Instructions
+
+Clone the repository:
+git clone <your-repo-url>
+cd srs
+Build the project:
+
+mvn clean install
+Run the application:
+
+mvn spring-boot:run
+Access the application at http://localhost:8080.
+
+Swagger UI is available at http://localhost:8080/swagger-ui.html.
+
+Sample HTTP Requests
+
+Register a Student
+POST http://localhost:8080/students \
+"Content-Type: application/json" \
+'{"name":"John Doe","email":"john.doe@example.com"}'
+
+Add a Course
+POST http://localhost:8080/courses \
+"Content-Type: application/json" \
+'{"code":"CS101","title":"Introduction to Programming","instructor":"Dr. Smith"}'
+
+Register a Student for a Course
+POST http://localhost:8080/students/{studentId}/register/{courseId}
+
+Drop a Course
+DELETE http://localhost:8080/students/{studentId}/drop/{courseId}
+
+List Registered Courses
+GET http://localhost:8080/students/{studentId}/courses
+
+List All Courses
+GET http://localhost:8080/courses
+
+Assumptions
+UUIDs are used for IDs to ensure uniqueness.
+
+In-memory storage uses HashMaps for students, courses, and registrations.
+
+No pagination is implemented for GET /courses (bonus feature not included due to time constraints).
+
+Basic unit tests cover core functionality; comprehensive testing can be extended.
+
+Code Structure
+config/: Swagger configuration for API documentation.
+
+controller/: REST controllers for handling HTTP requests.
+
+dto/: Data Transfer Objects for request/response payloads.
+
+model/: Core data models (Student, Course, Registration).
+
+service/: Business logic and in-memory storage.
+
+exception/: Custom exceptions for error handling.
+
+test/: Unit tests using JUnit and Mockito.
+
+Test Coverage
+Basic unit tests cover course addition and student registration.
+
+Tests verify business constraints (e.g., unique email, unique course code, duplicate registration prevention).
+
+Further test coverage can be added for edge cases.
+
+Contact
+For clarifications, reach out to the ZDATA Innovation team.
