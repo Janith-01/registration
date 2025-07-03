@@ -1,16 +1,11 @@
 package com.zdata.registration.model;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.UUID;
 
 public class Course {
     private UUID id;
-    @NotBlank(message = "Code is mandatory")
     private String code;
-    @NotBlank(message = "Title is mandatory")
     private String title;
-    @NotBlank(message = "Instructor is mandatory")
     private String instructor;
 
     public Course() {

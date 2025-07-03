@@ -23,12 +23,14 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    // Add a new student
     @PostMapping
     public ResponseEntity<Student> addStudent(@Valid @RequestBody StudentDto studentDto) {
         Student student = studentService.addStudent(studentDto);
         return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 
+    // register a course for a student
     @PostMapping("/{studentId}/register/{courseId}")
     public ResponseEntity<Registration> registerCourse(@PathVariable UUID studentId, @PathVariable UUID courseId) {
         Registration registration = studentService.registerCourse(studentId, courseId);
@@ -39,12 +41,14 @@ public class StudentController {
         return new ResponseEntity<>(registration, HttpStatus.CREATED);
     }
 
+    // Drop a course for a student
     @DeleteMapping("/{studentId}/drop/{courseId}")
     public ResponseEntity<Void> dropCourse(@PathVariable UUID studentId, @PathVariable UUID courseId) {
         studentService.dropCourse(studentId, courseId);
         return ResponseEntity.noContent().build();
     }
 
+    //get all courses 
     @GetMapping("/{studentId}/courses")
     public ResponseEntity<List<Course>> getRegisteredCourses(@PathVariable UUID studentId) {
         List<Course> courses = studentService.getRegisteredCourses(studentId);

@@ -1,17 +1,12 @@
 package com.zdata.registration.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
 
 public class Student {
     private UUID id;
-    @NotBlank
     private String name;
-    @NotBlank
-    @Email
     private String email;
 
     public Student() {
