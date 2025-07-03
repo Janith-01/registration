@@ -65,14 +65,13 @@ public class StudentControllerTest {
 
     @Test
     void testAddStudent_DuplicateEmail() throws Exception {
-
+        // Arrange
         StudentDto studentDto = new StudentDto();
         studentDto.setName("John Doe");
         studentDto.setEmail("john.doe@example.com");
 
         when(studentService.addStudent(any(StudentDto.class)))
                 .thenThrow(new com.zdata.registration.exception.ConflictException("Email john.doe@example.com already exists"));
-
 
         mockMvc.perform(post("/students")
                         .contentType(MediaType.APPLICATION_JSON)
